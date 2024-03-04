@@ -1,6 +1,13 @@
 # Spring 6 Reactive
 This repository contains code examples for my course Spring Framework 6: Beginner to Guru.
 
+## Setup Initialzr
+Developer Tools:    Lombok
+Web:                Spring Reactive Web
+SQL:                Spring Data R2DBC
+SQL:                H2 Database
+I/O:                Validation
+
 ## All Spring Framework Guru Courses
 ### Spring Framework 6
 * [Hibernate and Spring Data JPA: Beginner to Guru](https://www.udemy.com/course/hibernate-and-spring-data-jpa-beginner-to-guru/?referralCode=251C4C865302C7B1BB8F)

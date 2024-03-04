@@ -1,0 +1,104 @@
+package guru.springframework.spring6reactive.bootstrap;
+
+import guru.springframework.spring6reactive.domain.Beer;
+import guru.springframework.spring6reactive.domain.Customer;
+import guru.springframework.spring6reactive.model.BeerStyle;
+import guru.springframework.spring6reactive.repositories.IBeerRepository;
+import guru.springframework.spring6reactive.repositories.ICustomerRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Component  // bring it into context
+@RequiredArgsConstructor
+public class BootstrapData implements CommandLineRunner {
+    private final IBeerRepository beerRepository;
+    private final ICustomerRepository customerRepository;
+
+    @Override
+    public void run(String... args) throws Exception {
+        loadBeerData();
+        loadCustomerData();
+
+        beerRepository.count().subscribe(count-> {
+            System.out.println("Beer Count is: " + count);
+        });
+        customerRepository.count().subscribe(count ->
+                System.out.println("Customer Count is: " + count));
+    }
+
+    private void loadBeerData() {
+        beerRepository.count().subscribe(count-> {
+            if(count == 0) {
+                Beer beer1 = Beer.builder()
+                        .beerName("KEO")
+                        .beerStyle(BeerStyle.PILSNER)
+                        .upc("12343")
+                        .price(new BigDecimal("12.99"))
+                        .quantityOnHand(122)
+                        .createdDate(LocalDateTime.now())
+                        .lastModifiedDate(LocalDateTime.now())
+                        .build();
+
+                Beer beer2 = Beer.builder()
+                        .beerName("LEON")
+                        .beerStyle(BeerStyle.PILSNER)
+                        .upc("98765")
+                        .price(new BigDecimal("5.99"))
+                        .quantityOnHand(200)
+                        .createdDate(LocalDateTime.now())
+                        .lastModifiedDate(LocalDateTime.now())
+                        .build();
+
+                Beer beer3 = Beer.builder()
+                        .beerName("CARLSBERG")
+                        .beerStyle(BeerStyle.PALE_ALE)
+                        .upc("454545")
+                        .price(new BigDecimal("3.99"))
+                        .quantityOnHand(100)
+                        .createdDate(LocalDateTime.now())
+                        .lastModifiedDate(LocalDateTime.now())
+                        .build();
+
+                // Count is: 0
+//                beerRepository.save(beer1);
+//                beerRepository.save(beer2);
+//                beerRepository.save(beer3);
+
+                // put also backpressure, so to get it persisted
+                beerRepository.save(beer1).subscribe();
+                beerRepository.save(beer2).subscribe();
+                beerRepository.save(beer3).subscribe();
+            }
+        });
+
+
+    }
+
+    private void loadCustomerData() {
+        customerRepository.count().subscribe(count-> {
+            if(count == 0) {
+                Customer customer1 = Customer.builder()
+                        .customerName("Customer1")
+                        .createdDate(LocalDateTime.now())
+                        .lastModifiedDate(LocalDateTime.now())
+                        .build();
+
+                Customer customer2 = Customer.builder()
+                        .customerName("Customer2")
+                        .createdDate(LocalDateTime.now())
+                        .lastModifiedDate(LocalDateTime.now())
+                        .build();
+
+                // put also backpressure, so to get it persisted
+                customerRepository.save(customer1).subscribe();
+                customerRepository.save(customer2).subscribe();
+            }
+        });
+
+
+    }
+}
